@@ -34,7 +34,7 @@ resource "google_project_service" "services" {
 
 # Grant project owner role to users
 resource "google_project_iam_member" "project_owners" {
-  for_each = toset(["user1", "user2", "user3"])
+  for_each = toset(var.project_owners)
 
   project = var.project_id
   role    = "roles/owner"

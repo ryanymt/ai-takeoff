@@ -13,3 +13,9 @@ variable "billing_account" {
   type = string
   description = "The billing account ID for the Google Cloud project"
 }
+
+variable "project_owners" {
+  type = set(string)
+  description = "A set of usernames to be granted the project owner role"
+  default = [] # Set an empty set as default
+}
