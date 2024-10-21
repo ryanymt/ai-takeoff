@@ -40,3 +40,19 @@ resource "google_project_iam_member" "project_owners" {
   role    = "roles/owner"
   member  = "user:${each.key}@example.com" # Replace with actual user emails
 }
+
+# Temp Vertex AI custom training Persistance Resource plan
+# This plan does not use any GPU, to be added
+# https://cloud.google.com/vertex-ai/docs/training/persistent-resource-create#create_a_persistent_resource
+resource "null_resource" "create_persistent_resource" {
+  provisioner "local-exec" {
+    command = <<EOT
+    gcloud ai persistent-resources create \
+    --persistent-resource-id=ai-take \
+    --display-name=ai-takeoff \
+    --project=fraud123-438914 \
+    --region=us-central1 \
+    --resource-pool-spec="replica-count=1,min-replica-count=1,max-replica-count=3,machine-type=n1-standard-4,disk-type=pd-ssd,disk-size=100"
+    EOT
+  }
+}

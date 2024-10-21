@@ -19,3 +19,8 @@ variable "project_owners" {
   description = "A set of usernames to be granted the project owner role"
   default = [] # Set an empty set as default
 }
+
+variable "domain_name" {
+  type = string
+  description = "The domain name for the user email addresses"
+}
