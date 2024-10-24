@@ -169,3 +169,6 @@ vertex_ai/build_training
 vertex_ai/model
 vertex_ai/predictions.json
 vertex_ai/pipelines
+
+# tuning
+llm_tuning/.ipynb_checkpoints
