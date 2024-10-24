@@ -171,4 +171,4 @@ vertex_ai/predictions.json
 vertex_ai/pipelines
 
 # tuning
-llm_tuning/.ipynb_checkpoints
+.ipynb_checkpoints
