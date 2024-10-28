@@ -1,3 +1,9 @@
+"""
+29 Oct:
+- Need to add metadata check before training. It fails if metadata already exist
+- Code to be clean up. Remove unnecessary prints 
+
+"""
 # General
 import os
 import sys
@@ -281,7 +287,7 @@ if __name__ == "__main__":
 
     models = {}
     for i, params in enumerate(parameters):
-        run_name = f"ff-xgboost-local-run-t-{i}"
+        run_name = f"ff-xgboost-local-run-app-{i}"
         print(run_name)
         vertex_ai.start_run(run=run_name)
         vertex_ai.log_params(params)
@@ -308,7 +314,7 @@ if __name__ == "__main__":
     model_directory = "models"  # Changed to current directory
     os.makedirs(model_directory, exist_ok=True)  # Create if it doesn't exist
 
-    model = models[f"ff-xgboost-local-run-t-{i}"]
+    model = models[f"ff-xgboost-local-run-app-{i}"]
     artifact_filename = "model.bst"
     # Replace with your desired bucket name and model path
     bucket_name = "model-upload"  
