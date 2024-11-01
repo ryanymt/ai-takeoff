@@ -5,9 +5,10 @@ from pathlib import Path
 import dask.dataframe as dask_df
 from dask.distributed import LocalCluster, Client
 import xgboost as xgb
-from utils import gcs_path_to_local_path, resample, preprocess, evaluate_model
+from trainer.utils import gcs_path_to_local_path, resample, preprocess, evaluate_model
 
 
+print("start...")
 with open("config.yaml", "r") as f:
     config = yaml.safe_load(f)
 
@@ -88,11 +89,13 @@ def main():
     # read data
     train_df = dask_df.read_csv(TRAINING_DATA_PATH, dtype=DATA_SCHEMA)
     test_df = dask_df.read_csv(TEST_DATA_PATH, dtype=DATA_SCHEMA)
+    print("df loaded")
     
     # preprocessing
     preprocessed_train_df = preprocess(train_df, UNUSED_COLUMNS)
     preprocessed_test_df = preprocess(test_df, UNUSED_COLUMNS)
-    
+    print("df preprocessed")
+
     # downsampling
     train_nfraud_df = preprocessed_train_df[preprocessed_train_df[LABEL_COLUMN]==0]
     train_fraud_df = preprocessed_train_df[preprocessed_train_df[LABEL_COLUMN]==1]
@@ -106,14 +109,17 @@ def main():
     y_true = preprocessed_test_df.loc[:, LABEL_COLUMN].astype(int).values
     
     # train model
+    print("start training")
     cluster =  LocalCluster()
     client = Client(cluster)
     model = xgb.dask.DaskXGBClassifier(objective="reg:logistic", eval_metric="logloss")
     model.client = client
     model.fit(x_train, y_train, eval_set=[(x_true, y_true)])
+    print("finish training")
     if not Path(MODEL_DIR).exists():
         Path(MODEL_DIR).mkdir(parents=True, exist_ok=True)
     model.save_model(MODEL_PATH)
+    print("model saved")
     
     #generate metrics
     metrics = evaluate_model(model, x_true, y_true)
@@ -121,6 +127,10 @@ def main():
         Path(deliverable_uri).mkdir(parents=True, exist_ok=True)
     with open(metrics_uri, "w") as file:
         json.dump(metrics, file, sort_keys = True, indent = 4)
+    print("metrics saved")
 
 
-main()
+if __name__ == "__main__":
+    print("start training...")
+    main()
+    print("finish training")
