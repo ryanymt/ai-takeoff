@@ -55,17 +55,36 @@ Please make sure that you have selected a Google Cloud project as shown below:
   gcloud services enable bigquery.googleapis.com
   gcloud services enable artifactregistry.googleapis.com
   gcloud services enable iam.googleapis.com
+  gcloud services enable ml.googleapis.com
   
   gcloud pubsub subscriptions create "ff-tx-sub" --topic="ff-tx" --topic-project="cymbal-fraudfinder"
   gcloud pubsub subscriptions create "ff-tx-for-feat-eng-sub" --topic="ff-tx" --topic-project="cymbal-fraudfinder"
   gcloud pubsub subscriptions create "ff-txlabels-sub" --topic="ff-txlabels" --topic-project="cymbal-fraudfinder"
   
-  # Run the following command to grant the Compute Engine default service account access to read and write pipeline artifacts in Google Cloud Storage.
+  # Run the following command to grant the Compute Engine default service account access to read and write pipeline artifacts in Google Cloud Storage. Wait for few minutes for some principals creation completion
   PROJECT_ID=$(gcloud config get-value project)
   PROJECT_NUM=$(gcloud projects list --filter="$PROJECT_ID" --format="value(PROJECT_NUMBER)")
   gcloud projects add-iam-policy-binding $PROJECT_ID \
         --member="serviceAccount:${PROJECT_NUM}-compute@developer.gserviceaccount.com"\
         --role='roles/storage.admin'
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member="serviceAccount:${PROJECT_NUM}-compute@developer.gserviceaccount.com"\
+        --role='roles/pubsub.admin'
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member="serviceAccount:${PROJECT_NUM}-compute@developer.gserviceaccount.com"\
+        --role='roles/bigquery.admin'
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member="serviceAccount:${PROJECT_NUM}-compute@developer.gserviceaccount.com"\
+        --role='roles/dataflow.admin'
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member="serviceAccount:${PROJECT_NUM}-compute@developer.gserviceaccount.com"\
+        --role='roles/dataflow.worker'
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member="serviceAccount:${PROJECT_NUM}-compute@developer.gserviceaccount.com"\
+        --role='roles/artifactregistry.admin'
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+        --member="serviceAccount:${PROJECT_NUM}-compute@developer.gserviceaccount.com"\
+        --role='roles/aiplatform.admin'
   gcloud projects add-iam-policy-binding $PROJECT_ID \
         --member="serviceAccount:${PROJECT_NUM}@cloudbuild.gserviceaccount.com"\
         --role='roles/aiplatform.admin'
@@ -81,17 +100,20 @@ Please make sure that you have selected a Google Cloud project as shown below:
   gcloud projects add-iam-policy-binding $PROJECT_ID \
         --member="serviceAccount:service-${PROJECT_NUM}@gcp-sa-aiplatform.iam.gserviceaccount.com"\
         --role='roles/storage.objectAdmin'   
+  
+  gcloud compute networks create fraud-finder-network --enable-ula-internal-ipv6 --subnet-mode=custom
+  gcloud compute networks subnets create us-central1 --network=fraud-finder-network --range=10.0.0.0/24 --region=us-central1
+  gcloud compute firewall-rules create fraud-finder-fw-rule --network=fraud-finder-network --allow=tcp:22,tcp:3389,udp,icmp,sctp
   ```
+
+- Override parent's policy: `constraints/compute.vmExternalIpAccess` and grant VM role `Editor` and `Service Account User`
 
 #### Step 2: Create a User-Managed Notebook instance on Vertex AI Workbench
 
-- Browse to [Vertex AI Workbench](https://console.cloud.google.com/vertex-ai/workbench/list/instances) page, Click on "**USER-MANAGED NOTEBOOKS**" and Click on "**+ NEW NOTEBOOK**" as shown in the image below.
+- Browse to [Vertex AI Workbench](https://console.cloud.google.com/vertex-ai/workbench/list/instances) page, Click on "**CREATE NEW**" as shown in the image below. You can also click on **ADVANCED OPTIONS** to configure the instance.
   ![image](./misc/images/click-new-notebook.png)
   
-- Please make sure you have selected the correct project when creating a new notebook. Upon clicking the "**+ NEW NOTEBOOK**", you will be presented with a list of notebook instance options. Select `Python 3`
-  ![image](./misc/images/select-notebook-instance.png)
-
-- Pick a name (or leave it default), select a location, and then click "**CREATE**" to create the notebook instance.
+- Pick a name (or leave it default), select a location, and `Instance` workbench type is recommended.
   ![image](./misc/images/create-notebook-instance.png)
 
 - The instance will be ready when you see a green tick and can click on "**OPEN JUPYTERLAB**" on the [User-Managed Notebooks page](https://console.cloud.google.com/vertex-ai/workbench/list/instances). It may take a few minutes for the instance to be ready.
