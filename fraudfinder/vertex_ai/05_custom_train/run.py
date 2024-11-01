@@ -1,8 +1,13 @@
 import yaml
+import argparse
 from google.cloud import aiplatform as vertex_ai
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ps", required=False)
+    args = parser.parse_args()
+
     with open("config.yaml", "r") as f:
         config = yaml.safe_load(f)
 
@@ -26,5 +31,5 @@ if __name__ == "__main__":
         dataset=dataset,
         model_display_name=config["MODEL_NAME"],
         replica_count=1,
-        persistent_resource_id=config["RESOURCE_ID"],
+        persistent_resource_id=args.ps,
     )
