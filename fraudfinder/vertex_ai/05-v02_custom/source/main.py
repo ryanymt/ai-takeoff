@@ -86,10 +86,10 @@ if __name__ == "__main__":
     df = preprocess(df)
 
     # 8. Train and evaluate model
-    model, metrics = train_and_evaluate_model(df)
+    model, metrics = train_and_evaluate_model(df, TARGET)
 
     # 9. Save the model
-    bucket_name = "model-upload"
+    model_bucket = "model-upload-2808"
     model_path = "models/model.bst"
-    save_model_to_gcs(model, BUCKET_NAME, "model.bst") 
+    save_model_to_gcs(model, model_bucket, "model.bst") 
 

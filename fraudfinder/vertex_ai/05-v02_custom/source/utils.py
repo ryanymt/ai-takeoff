@@ -115,13 +115,16 @@ def preprocess(df: pd.DataFrame):
     numeric_columns = df.select_dtypes(["int32", "float32", "float64"]).columns
     df[numeric_columns] = df[numeric_columns].astype("float32")
 
+    # Convert tx_amount to numeric
+    df['tx_amount'] = pd.to_numeric(df['tx_amount']) 
+
     dummy_columns = list(df.dtypes[df.dtypes == "category"].index)
     df = pd.get_dummies(df, columns=dummy_columns)
 
     return df
 
 
-def train_and_evaluate_model(df: pd.DataFrame):
+def train_and_evaluate_model(df: pd.DataFrame, target_column: str):
     """
     Trains an XGBoost model, evaluates it, and returns the model and metrics.
 
@@ -134,8 +137,8 @@ def train_and_evaluate_model(df: pd.DataFrame):
     """
 
     # Split data into features and target
-    X = df.drop(columns=[TARGET])  
-    y = df[TARGET]
+    X = df.drop(columns=[target_column])  
+    y = df[target_column]
 
     # Split data into train and test sets
     X_train, X_test, y_train, y_test = train_test_split(
@@ -178,11 +181,17 @@ def save_model_to_gcs(model, bucket_name, model_path):
     blob = bucket.blob(model_path)
 
     # Save the model to a temporary file
+    #debug
+    print(f"Saving model to: gs://{bucket_name}/{model_path}")
     temp_file = "/tmp/model.bst"
     model.save_model(temp_file)
+    # debug
+    print(os.path.exists(temp_file))
 
     # Upload the temporary file to GCS
     blob.upload_from_filename(temp_file)
+    #debug
+    print(blob.public_url)
 
 
 def fetch_features_from_featurestore(base_df: pd.DataFrame) -> pd.DataFrame:
