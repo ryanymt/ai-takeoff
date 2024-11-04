@@ -172,3 +172,13 @@ vertex_ai/pipelines
 
 # tuning
 .ipynb_checkpoints
+
+# argolis
+argolis*
+
+# terraform
+*.tfstate
+*.tfstate.*
+.terraform*
+
+
