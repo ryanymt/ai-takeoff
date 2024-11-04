@@ -1,7 +1,3 @@
-"""
-In progress, still have errors. :(
-"""
-
 import os
 from google.cloud import bigquery
 from google.cloud import aiplatform as vertex_ai
