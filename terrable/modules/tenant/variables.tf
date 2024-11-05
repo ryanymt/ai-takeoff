@@ -3,6 +3,17 @@ variable "project_id" {
   description = "The ID of the Google Cloud project"
 }
 
+variable "project_owners" {
+  type        = set(string)
+  description = "A set of usernames to be granted the project owner role"
+}
+
+variable "region" {
+  type        = string
+  description = "The region for the Google Cloud project resources"
+  default     = "us-central1" # Set a default region
+}
+
 variable "services" {
   description = "Services to be enabled for the project"
   type        = set(string)
