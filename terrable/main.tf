@@ -14,8 +14,10 @@ provider "google" {
 module "tenant" {
   source = "./modules/tenant"
 
-  network_name = "ai-takeoff-vpc"
-  project_id   = var.project_id
+  network_name   = "ai-takeoff-vpc"
+  project_id     = var.project_id
+  project_owners = var.project_owners
+  region         = var.region
 
   services = [
     "iam.googleapis.com",
@@ -54,25 +56,6 @@ module "tenant" {
   ]
 }
 
-# # Enable required services
-# resource "google_project_service" "services" {
-#   for_each = toset([
-#     "notebooks.googleapis.com",
-#     "cloudresourcemanager.googleapis.com",
-#     "aiplatform.googleapis.com",
-#     "pubsub.googleapis.com",
-#     "run.googleapis.com",
-#     "cloudbuild.googleapis.com",
-#     "dataflow.googleapis.com",
-#     "bigquery.googleapis.com",
-#     "artifactregistry.googleapis.com",
-#     "iam.googleapis.com"
-#   ])
-
-#   project = var.project_id
-#   service = each.key
-#   disable_on_destroy = false
-# }
 
 # # Grant project owner role to users
 # resource "google_project_iam_member" "project_owners" {
