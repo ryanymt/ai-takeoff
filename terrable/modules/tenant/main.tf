@@ -38,3 +38,19 @@ module "cli" {
   destroy_cmd_entrypoint = "${path.module}/scripts/persistent-resource.sh"
   destroy_cmd_body       = "delete ${var.project_id} ${var.region}"
 }
+
+# BQ reservations
+resource "google_bigquery_reservation" "reservation" {
+  name     = var.project_id
+  location = var.region
+
+  // Set to 0 for testing purposes
+  // In reality this would be larger than zero
+  slot_capacity     = 100
+  edition           = "ENTERPRISE"
+  ignore_idle_slots = true
+  concurrency       = 0
+  autoscale {
+    max_slots = 100
+  }
+}
