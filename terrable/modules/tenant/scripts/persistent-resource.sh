@@ -14,10 +14,13 @@ create_resource() {
 # test #        --resource-pool-spec="replica-count=1,min-replica-count=1,max-replica-count=3,machine-type=n1-standard-4,disk-type=pd-ssd,disk-size=100"
 #    --resource-pool-spec="replica-count=1,min-replica-count=1,max-replica-count=3,machine-type=n1-standard-4,accelerator-type=ACCELERATOR_TYPE,accelerator-count=1,disk-type=pd-ssd,disk-size=100"
 
-    while [ \"$result\" != \"RUNNING\" ]; do
+    while [ "${result}" != "RUNNING" ]; do
         sleep 10
         result=$(gcloud ai persistent-resources describe ${resource_id} --project=${project_id} --region=${region} --format=json | jq -r '.state')
-    done
+        if [ "${result}" = "ERROR" ]; then
+            exit 1
+        fi
+    done 
 }
 
 delete_resource() {

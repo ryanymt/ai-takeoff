@@ -6,7 +6,7 @@ variable "project_id" {
 variable "region" {
   type        = string
   description = "The region for the Google Cloud project resources"
-  default     = "us-central1" # Set a default region
+  default     = "europe-west4" # Set a default region
 }
 
 variable "billing_account" {

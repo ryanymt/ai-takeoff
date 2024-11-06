@@ -12,7 +12,6 @@ variable "project_owners" {
 variable "region" {
   type        = string
   description = "The region for the Google Cloud project resources"
-  default     = "us-central1" # Set a default region
 }
 
 variable "resource_id" {

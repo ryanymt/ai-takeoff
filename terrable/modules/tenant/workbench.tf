@@ -5,10 +5,10 @@ resource "google_service_account" "workbench_sa" {
 }
 
 resource "random_shuffle" "workbench_zone" {
-  input = ["asia-southeast1-a", "asia-southeast1-b", "asia-southeast1-c"]
+  input = [format("%s-%s", var.region, "a"), format("%s-%s", var.region, "b"), format("%s-%s", var.region, "c")]
 }
 
-module "simple_vertex_ai_workbench" {
+module "vertex_ai_workbench" {
   source = "GoogleCloudPlatform/vertex-ai/google//modules/workbench"
 
   name       = var.resource_id
@@ -38,7 +38,7 @@ module "simple_vertex_ai_workbench" {
   network_interfaces = [
     {
       network  = module.vpc.network_id
-      subnet   = module.vpc.subnets_ids[0]
+      subnet   = module.vpc.subnets_ids[index(module.vpc.subnets_regions, "${var.region}")]
       nic_type = "GVNIC"
     }
   ]
