@@ -33,15 +33,15 @@ module "cli" {
   additional_components = ["kubectl", "beta"]
 
   create_cmd_entrypoint = "${path.module}/scripts/persistent-resource.sh"
-  create_cmd_body       = "create ${var.project_id} ${var.region}"
+  create_cmd_body       = "create ${var.project_id} ${var.region} ${var.resource_id}"
 
   destroy_cmd_entrypoint = "${path.module}/scripts/persistent-resource.sh"
-  destroy_cmd_body       = "delete ${var.project_id} ${var.region}"
+  destroy_cmd_body       = "delete ${var.project_id} ${var.region} ${var.resource_id}"
 }
 
 # BQ reservations
 resource "google_bigquery_reservation" "reservation" {
-  name     = var.project_id
+  name     = var.resource_id
   location = var.region
 
   // Set to 0 for testing purposes

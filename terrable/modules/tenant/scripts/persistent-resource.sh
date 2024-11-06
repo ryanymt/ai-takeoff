@@ -27,7 +27,7 @@ delete_resource() {
 command=$1
 project_id=$2
 region=$3
-resource_id=${project_id}
+resource_id=$4
 
 case "$command" in
     create)

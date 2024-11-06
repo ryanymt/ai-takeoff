@@ -11,14 +11,14 @@ resource "random_shuffle" "workbench_zone" {
 module "simple_vertex_ai_workbench" {
   source = "GoogleCloudPlatform/vertex-ai/google//modules/workbench"
 
-  name       = "ai-takeoff-workbench"
+  name       = var.resource_id
   location   = random_shuffle.workbench_zone.result[0]
   project_id = var.project_id
 
   machine_type = "e2-standard-8"
 
   labels = {
-    env  = "test"
+    env  = "dev"
     type = "workbench"
   }
 
