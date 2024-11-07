@@ -38,7 +38,7 @@ module "cli" {
   destroy_cmd_entrypoint = "${path.module}/scripts/persistent-resource.sh"
   destroy_cmd_body       = "delete ${var.project_id} ${var.region} ${var.resource_id}"
 
-  depends_on = [google_project_service.services]
+  #  depends_on = [google_project_service.services]
 }
 
 # BQ reservations
@@ -54,5 +54,43 @@ resource "google_bigquery_reservation" "reservation" {
   concurrency       = 0
   autoscale {
     max_slots = 100
+  }
+}
+
+resource "google_service_account" "default" {
+  account_id   = "lab-sa"
+  display_name = "Custom SA for VM Instance"
+}
+
+resource "google_compute_instance" "default" {
+  name         = "my-instance"
+  machine_type = "n1-standard-4"
+  zone         = random_shuffle.workbench_zone.result[0]
+
+  tags = ["lab"]
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+
+  // Local SSD disk
+  scratch_disk {
+    interface = "NVME"
+  }
+
+  network_interface {
+    subnetwork = module.vpc.subnets_ids[index(module.vpc.subnets_regions, "${var.region}")]
+  }
+
+  shielded_instance_config {
+    enable_secure_boot = true
+  }
+
+  service_account {
+    # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
+    email  = google_service_account.default.email
+    scopes = ["cloud-platform"]
   }
 }
