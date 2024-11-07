@@ -20,6 +20,12 @@ variable "project_owners" {
   default     = [] # Set an empty set as default
 }
 
+variable "resource_id" {
+  type        = string
+  description = "The default ID for shared resources"
+  default     = "ai-takeoff"
+}
+
 # variable "domain_name" {
 #   type = string
 #   description = "The domain name for the user email addresses"
