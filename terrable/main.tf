@@ -18,6 +18,7 @@ module "tenant" {
   project_id     = var.project_id
   project_owners = var.project_owners
   region         = var.region
+  resource_id    = var.resource_id
 
   services = [
     "iam.googleapis.com",
