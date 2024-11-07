@@ -35,6 +35,7 @@ module "tenant" {
     "artifactregistry.googleapis.com",
     "language.googleapis.com", 
     "documentai.googleapis.com",
+    "discoveryengine.googleapis.com",
   ]
 
   subnets = [
