@@ -33,6 +33,10 @@ module "tenant" {
     "dataflow.googleapis.com",
     "bigquery.googleapis.com",
     "artifactregistry.googleapis.com",
+    "language.googleapis.com",
+    "documentai.googleapis.com",
+    "storage.googleapis.com",
+    "discoveryengine.googleapis.com",
   ]
 
   subnets = [
