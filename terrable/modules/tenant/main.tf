@@ -37,6 +37,8 @@ module "cli" {
 
   destroy_cmd_entrypoint = "${path.module}/scripts/persistent-resource.sh"
   destroy_cmd_body       = "delete ${var.project_id} ${var.region} ${var.resource_id}"
+
+  depends_on = [google_project_service.services]
 }
 
 # BQ reservations
