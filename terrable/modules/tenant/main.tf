@@ -15,15 +15,24 @@ resource "google_project_service" "services" {
 }
 
 # add the project owners
-resource "google_project_iam_binding" "owners" {
+resource "google_project_iam_member" "owners" {
   for_each = toset(var.project_owners)
 
   project = var.project_id
   role    = "roles/owner"
-  members = [
-    "user:${each.key}"
-  ]
+  member  = "user:${each.key}"
 }
+
+# # ensure the binding 
+# resource "google_project_iam_binding" "owners" {
+#   for_each = toset(var.project_owners)
+
+#   project = var.project_id
+#   role    = "roles/owner"
+#   members = [
+#     "user:${each.key}"
+#   ]
+# }
 
 module "cli" {
   source  = "terraform-google-modules/gcloud/google"

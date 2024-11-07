@@ -15,7 +15,8 @@ module "vertex_ai_workbench" {
   location   = random_shuffle.workbench_zone.result[0]
   project_id = var.project_id
 
-  machine_type = "e2-standard-8"
+  machine_type  = "e2-standard-8"
+  desired_state = "ACTIVE"
 
   labels = {
     env  = "dev"
