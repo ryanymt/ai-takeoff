@@ -1,8 +1,8 @@
-resource "google_service_account" "workbench_sa" {
-  account_id   = "vertex-ai-workbench-sa"
-  display_name = "Vertex AI Workbench Service Account"
-  project      = var.project_id
-}
+#resource "google_service_account" "workbench_sa" {
+#  account_id   = "vertex-ai-workbench-sa"
+#  display_name = "Vertex AI Workbench Service Account"
+#  project      = var.project_id
+#}
 
 resource "random_shuffle" "workbench_zone" {
   input = [format("%s-%s", var.region, "a"), format("%s-%s", var.region, "b"), format("%s-%s", var.region, "c")]
@@ -23,11 +23,11 @@ module "vertex_ai_workbench" {
     type = "workbench"
   }
 
-  service_accounts = [
-    {
-      email = google_service_account.workbench_sa.email
-    },
-  ]
+#  service_accounts = [
+#    {
+#      email = google_service_account.workbench_sa.email
+#    },
+#  ]
 
   data_disks = [
     {
