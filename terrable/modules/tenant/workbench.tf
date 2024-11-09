@@ -46,7 +46,7 @@ module "vertex_ai_workbench" {
 
   ## https://cloud.google.com/vertex-ai/docs/workbench/instances/manage-metadata
   metadata_configs = {
-    idle-timeout-seconds = 10800
+    idle-timeout-seconds = 86400
   }
 
   shielded_instance_config = {
