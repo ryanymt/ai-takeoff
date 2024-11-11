@@ -3,7 +3,7 @@ FROM python:3.10
 WORKDIR /root
 
 # Installs additional packages
-RUN pip install gcsfs pyyaml numpy pandas scikit-learn dask distributed xgboost --upgrade
+RUN pip install gcsfs pyyaml numpy pandas scikit-learn dask distributed xgboost requests --upgrade
 
 # Copies the trainer code to the docker image.
 COPY . ./
