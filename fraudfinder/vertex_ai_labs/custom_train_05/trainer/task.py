@@ -1,7 +1,6 @@
 import os
 import json
 import yaml
-import requests
 from pathlib import Path
 import dask.dataframe as dask_df
 from dask.distributed import LocalCluster, Client
@@ -13,13 +12,7 @@ from trainer.utils import (
 
 
 # Detect Cloud project from environment
-headers = {"Metadata-Flavor": "Google"}
-PROJECT_ID = requests.get(
-    "http://metadata.google.internal/computeMetadata/v1/project/project-id", 
-    headers=headers, 
-    timeout=10
-)
-PROJECT_ID = PROJECT_ID.content.decode()
+PROJECT_ID = os.environ["project_id"]
 BUCKET_NAME = f"{PROJECT_ID}-fraudfinder"
 CONFIG_PATH = "config/vertex_conf.yaml"
 with gcs_read(PROJECT_ID, BUCKET_NAME, CONFIG_PATH).open("r") as blob:

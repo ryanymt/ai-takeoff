@@ -16,5 +16,5 @@ done
 
 gcloud artifacts repositories create $IMAGE_REPOSITORY --repository-format=docker --location=$LOCATION --description="FraudFinder Docker Image repository"
 gcloud auth configure-docker us-central1-docker.pkg.dev
-docker build ./ -t $IMAGE_URI
+docker build ./ -t $IMAGE_URI --build-arg project_id=$(gcloud config get-value project)
 docker push $IMAGE_URI

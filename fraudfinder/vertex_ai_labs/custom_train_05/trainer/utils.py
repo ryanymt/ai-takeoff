@@ -65,6 +65,7 @@ class VertexConfig(BaseModel):
     AVG_PR_CONDITION: str = Field(default="avg_pr_condition")
     PERSISTENT_RESOURCE_ID: Optional[str] = Field(default=None)
     REPLICA_COUNT: int = Field(default=1)
+    SERVICE_ACCOUNT: str
 
 
 def gcs_path_to_local_path(old_path: str) -> str:
