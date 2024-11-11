@@ -3,7 +3,7 @@ from typing import List, NamedTuple
 from kfp import dsl
 from google_cloud_pipeline_components.types import artifact_types
 
-from fraudfinder.vertex_ai_labs.kfp_train_06 import vertex_config
+from ..conf import vertex_config
 
 
 @dsl.component(

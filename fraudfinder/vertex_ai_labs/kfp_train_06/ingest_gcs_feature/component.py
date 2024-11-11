@@ -1,6 +1,6 @@
 from kfp import dsl
 
-from fraudfinder.vertex_ai_labs.kfp_train_06 import vertex_config
+from ..conf import vertex_config
 
 
 @dsl.component(

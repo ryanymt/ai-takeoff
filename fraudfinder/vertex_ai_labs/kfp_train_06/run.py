@@ -1,10 +1,12 @@
 import os
+import sys
 from kfp import compiler
 
 from google.cloud import aiplatform_v1 as vertex_ai
 
-from fraudfinder.vertex_ai_labs.kfp_train_06.pipeline import pipeline as custom_pipeline
-from fraudfinder.vertex_ai_labs.kfp_train_06 import vertex_config
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from pipeline import pipeline as custom_pipeline
+from conf import vertex_config
 
 
 if __name__ == "__main__":
