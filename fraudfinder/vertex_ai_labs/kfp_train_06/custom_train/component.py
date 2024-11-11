@@ -1,3 +1,5 @@
+from typing import List
+
 from kfp import dsl
 from google_cloud_pipeline_components.types import artifact_types
 
@@ -21,8 +23,14 @@ from fraudfinder.vertex_ai_labs.kfp_train_06 import vertex_config
 )
 def train_model(
     project: str,
-    dataset: dsl.Input[artifact_types.VertexDataset],
+    location: str,
     bucket: str,
+    dataset: dsl.Input[artifact_types.VertexDataset],
+    dtype: dict,
+    drop_cols: List[str],
+    target_col: str,
+    feat_cols: List[str],
+    model_reg: str,
     trained_model: dsl.Output[artifact_types.VertexModel],
     test_ds: dsl.Output[dsl.Dataset],
 ):
@@ -44,18 +52,18 @@ def train_model(
     ## Training variables
     N_PARTITIONS = 4
 
-    vertex_ai.init(project=project, location=vertex_config.REGION, staging_bucket=bucket)
+    vertex_ai.init(project=project, location=location, staging_bucket=f"gs://{bucket}")
 
     # manually extract and split 
     dataset_id = dataset.metadata['resourceName'].split("/")[-1]
     dataset = vertex_ai.TabularDataset(dataset.metadata['resourceName'])
     dataset_uris = dataset.gca_resource.metadata['inputConfig']['gcsSource']['uri']
     dataset_uris = [gcs_path_to_local_path(dataset_uri) for dataset_uri in dataset_uris]
-    ds_df = dask_df.read_csv(dataset_uris, dtype=vertex_config.DATA_SCHEMA)
+    ds_df = dask_df.read_csv(dataset_uris, dtype=dtype)
     train_df, test_df = train_test_split(ds_df, test_size=0.2, shuffle=True)
     eval_df, test_df = train_test_split(test_df, test_size=0.5)
     TRAINING_DIR = (
-        f"/gcs/{vertex_config.BUCKET_NAME}/aiplatform-custom-training-"
+        f"/gcs/{bucket}/aiplatform-custom-training-"
         f"{datetime.now(timezone.utc).strftime('%Y-%m-%d-%H:%M:%S.%f')}"
     )
     TRAINING_DATA_DIR = (
@@ -93,12 +101,12 @@ def train_model(
 
     
     # preprocessing
-    preprocessed_train_df = preprocess(train_df, vertex_config.DROP_COLUMNS)
-    preprocessed_test_df = preprocess(test_df, vertex_config.DROP_COLUMNS)
+    preprocessed_train_df = preprocess(train_df, drop_cols)
+    preprocessed_test_df = preprocess(test_df, drop_cols)
     
     # downsampling
-    train_nfraud_df = preprocessed_train_df[preprocessed_train_df[vertex_config.TARGET_COLUMN]==0]
-    train_fraud_df = preprocessed_train_df[preprocessed_train_df[vertex_config.TARGET_COLUMN]==1]
+    train_nfraud_df = preprocessed_train_df[preprocessed_train_df[target_col]==0]
+    train_fraud_df = preprocessed_train_df[preprocessed_train_df[target_col]==1]
     train_nfraud_downsample = resample(
         train_nfraud_df,
         replace=True, 
@@ -107,10 +115,10 @@ def train_model(
     ds_preprocessed_train_df = dask_df.concat([train_nfraud_downsample, train_fraud_df])
     
     # target, features split
-    x_train = ds_preprocessed_train_df[vertex_config.FEAT_COLUMNS].values
-    y_train = ds_preprocessed_train_df.loc[:, vertex_config.TARGET_COLUMN].astype(int).values
-    x_true = preprocessed_test_df[vertex_config.FEAT_COLUMNS].values
-    y_true = preprocessed_test_df.loc[:, vertex_config.TARGET_COLUMN].astype(int).values
+    x_train = ds_preprocessed_train_df[feat_cols].values
+    y_train = ds_preprocessed_train_df.loc[:, target_col].astype(int).values
+    x_true = preprocessed_test_df[feat_cols].values
+    y_true = preprocessed_test_df.loc[:, target_col].astype(int).values
     preprocessed_test_df.to_csv(test_ds.path)
     
     # train model
@@ -126,7 +134,7 @@ def train_model(
     vertex_ai_model = vertex_ai.Model.upload_xgboost_model_file(
         xgboost_version="1.7",
         model_file_path=MODEL_PATH,
-        display_name=vertex_config.MODEL_REGISTRY,
+        display_name=model_reg,
     )
     trained_model.uri = vertex_ai_model.uri
     trained_model.metadata["resourceName"] = vertex_ai_model.resource_name

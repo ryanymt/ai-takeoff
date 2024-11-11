@@ -1,5 +1,6 @@
+from typing import List, NamedTuple
+
 from kfp import dsl
-from typing import NamedTuple
 from google_cloud_pipeline_components.types import artifact_types
 
 from fraudfinder.vertex_ai_labs.kfp_train_06 import vertex_config
@@ -23,6 +24,9 @@ def evaluate_model(
     threshold: float,
     model_in: dsl.Input[artifact_types.VertexModel],
     test_ds: dsl.Input[dsl.Dataset],
+    dtype: dict,
+    target_col: str,
+    feat_cols: List[str],
     metrics_uri: str,
 ) -> NamedTuple(
     "outputs",
@@ -67,11 +71,11 @@ def evaluate_model(
     # load the dataframe, dask save to path as folder, need to put wildcard
     print("eval", test_ds.path)
     print("eval", model_in.path)
-    test_df = dask_df.read_csv(f"{test_ds.path}/*", dtype=vertex_config.DATA_SCHEMA)
+    test_df = dask_df.read_csv(f"{test_ds.path}/*", dtype=dtype)
     test_df = test_df.compute()
     model = xgb.Booster()
     model.load_model(model_in.metadata["path"])
-    eval_metrics = evaluate_model_fn(model, test_df[vertex_config.FEAT_COLUMNS], test_df[vertex_config.TARGET_COLUMN], threshold=threshold)
+    eval_metrics = evaluate_model_fn(model, test_df[feat_cols], test_df[target_col], threshold=threshold)
 
     # Variables --------------------------------------------------------------------------------------------------------------------------
     metrics_path = metrics_uri.replace("gs://", "/gcs/")

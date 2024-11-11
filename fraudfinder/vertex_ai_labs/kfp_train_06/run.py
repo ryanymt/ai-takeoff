@@ -1,7 +1,9 @@
 import os
 from kfp import compiler
 
-from fraudfinder.vertex_ai_labs.kfp_train_06.pipeline import pipeline
+from google.cloud import aiplatform_v1 as vertex_ai
+
+from fraudfinder.vertex_ai_labs.kfp_train_06.pipeline import pipeline as custom_pipeline
 from fraudfinder.vertex_ai_labs.kfp_train_06 import vertex_config
 
 
@@ -11,7 +13,7 @@ if __name__ == "__main__":
     PIPELINE_PACKAGE_PATH = f"{PIPELINE_DIR}/pipeline_{vertex_config.ID}.json"
     # compile the pipeline
     pipeline_compiler = compiler.Compiler()
-    pipeline_compiler.compile(pipeline_func=pipeline, package_path=PIPELINE_PACKAGE_PATH)
+    pipeline_compiler.compile(pipeline_func=custom_pipeline, package_path=PIPELINE_PACKAGE_PATH)
     # instantiate pipeline representation
     pipeline_job = vertex_ai.PipelineJob(
         display_name=vertex_config.PIPELINE_NAME,

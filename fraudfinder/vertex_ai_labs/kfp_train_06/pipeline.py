@@ -50,12 +50,19 @@ def pipeline(
         replica_count=vertex_config.REPLICA_COUNT,
         machine_type=vertex_config.TRAIN_COMPUTE,
         base_output_directory=f"gs://{vertex_config.BUCKET_NAME}",
+        service_account=vertex_config.SERVICE_ACCOUNT,
         persistent_resource_id=persistence_resource_id,
     )
     train_model_op = train_model_component(
         project=project_id,
+        location=vertex_config.REGION,
+        bucket=vertex_config.BUCKET_NAME,
         dataset=dataset_create_op.outputs["dataset"],
-        bucket=f"gs://{vertex_config.BUCKET_NAME}",
+        dtype=vertex_config.DATA_SCHEMA,
+        drop_cols=vertex_config.DROP_COLUMNS,
+        target_col=vertex_config.TARGET_COLUMN,
+        feat_cols=vertex_config.FEAT_COLUMNS,
+        model_reg=vertex_config.MODEL_REGISTRY,
     ).after(dataset_create_op)
 
     # evaluate component
@@ -63,6 +70,9 @@ def pipeline(
         threshold=model_threshold,
         model_in=train_model_op.outputs["trained_model"], 
         test_ds=train_model_op.outputs["test_ds"],
+        dtype=vertex_config.DATA_SCHEMA,
+        target_col=vertex_config.TARGET_COLUMN,
+        feat_cols=vertex_config.FEAT_COLUMNS,
         metrics_uri=metrics_uri,
     ).after(train_model_op)
 
