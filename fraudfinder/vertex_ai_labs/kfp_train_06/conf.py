@@ -1,6 +1,6 @@
 import yaml
 import requests
-from .utils import gcs_read, VertexConfig
+from utils import gcs_read, VertexConfig
 
 
 # Detect Cloud project from environment

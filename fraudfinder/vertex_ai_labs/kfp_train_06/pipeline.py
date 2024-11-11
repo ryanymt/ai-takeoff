@@ -2,7 +2,7 @@ from kfp import dsl
 from google_cloud_pipeline_components.v1 import dataset, custom_job, endpoint
 from google_cloud_pipeline_components._placeholders import PERSISTENT_RESOURCE_ID_PLACEHOLDER
 
-from .conf import vertex_config
+from conf import vertex_config
 from ingest_gcs_feature.component import ingest_features_gcs
 from custom_train.component import train_model
 from custom_eval.component import evaluate_model

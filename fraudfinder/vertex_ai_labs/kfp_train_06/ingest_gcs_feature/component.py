@@ -1,6 +1,6 @@
 from kfp import dsl
 
-from ..conf import vertex_config
+from conf import vertex_config
 
 
 @dsl.component(

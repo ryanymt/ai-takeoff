@@ -3,7 +3,7 @@ from typing import List
 from kfp import dsl
 from google_cloud_pipeline_components.types import artifact_types
 
-from ..conf import vertex_config
+from conf import vertex_config
 
 
 @dsl.component(
