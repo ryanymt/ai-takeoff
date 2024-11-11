@@ -5,8 +5,7 @@ import xgboost as xgb
 from sklearn.metrics import (roc_curve, confusion_matrix, average_precision_score, f1_score, 
                             log_loss, precision_score, recall_score)
 from google.cloud import storage
-from pydantic import BaseModel, Field, field_validator
-from google_cloud_pipeline_components._placeholders import PERSISTENT_RESOURCE_ID_PLACEHOLDER
+from pydantic import BaseModel, Field
 
 
 def gcs_read(project_id: str, bucket: str, blob_name: str) -> storage.Blob:
@@ -21,6 +20,7 @@ class VertexConfig(BaseModel):
     REGION: str
     ID: str
     FEATURESTORE_ID: str
+    FEATUREVIEW_ID: str
     NETWORK: str
     SUBNET: str
     CUSTOMER_ENTITY_ID: str = Field(default="customer")
@@ -63,15 +63,8 @@ class VertexConfig(BaseModel):
     AVG_PR_THRESHOLD: float
     MODEL_THRESHOLD: float
     AVG_PR_CONDITION: str = Field(default="avg_pr_condition")
-    PERSISTENT_RESOURCE_ID: Optional[str] = Field(default=PERSISTENT_RESOURCE_ID_PLACEHOLDER)
+    PERSISTENT_RESOURCE_ID: Optional[str] = Field(default=None)
     REPLICA_COUNT: int = Field(default=1)
-
-    @field_validator("PERSISTENT_RESOURCE_ID")
-    @classmethod
-    def default_persistent_resource(cls, v: str) -> str:
-        if not v:
-            v = PERSISTENT_RESOURCE_ID_PLACEHOLDER
-        return v
 
 
 def gcs_path_to_local_path(old_path: str) -> str:

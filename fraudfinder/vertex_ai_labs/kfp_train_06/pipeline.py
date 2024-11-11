@@ -1,5 +1,6 @@
 from kfp import dsl
 from google_cloud_pipeline_components.v1 import dataset, custom_job, endpoint
+from google_cloud_pipeline_components._placeholders import PERSISTENT_RESOURCE_ID_PLACEHOLDER
 
 from fraudfinder.vertex_ai_labs.kfp_train_06 import vertex_config
 from fraudfinder.vertex_ai_labs.kfp_train_06.ingest_gcs_feature.component import ingest_features_gcs
@@ -39,13 +40,17 @@ def pipeline(
     ).after(ingest_features_op)
 
     # custom training job component - script
+    persistence_resource_id = (
+        vertex_config.PERSISTENT_RESOURCE_ID if vertex_config.PERSISTENT_RESOURCE_ID 
+        else PERSISTENT_RESOURCE_ID_PLACEHOLDER
+    )
     train_model_component = custom_job.create_custom_training_job_from_component(
         train_model,
         display_name=vertex_config.JOB_NAME,
         replica_count=vertex_config.REPLICA_COUNT,
         machine_type=vertex_config.TRAIN_COMPUTE,
         base_output_directory=f"gs://{vertex_config.BUCKET_NAME}",
-        # persistent_resource_id=PERSISTENT_RESOURCE_ID,
+        persistent_resource_id=persistence_resource_id,
     )
     train_model_op = train_model_component(
         project=project_id,
