@@ -1,4 +1,6 @@
 #/bin/bash
+# ways to call: ./build.sh -u us-central1-docker.pkg.dev/fraud-finder-lab/fraudfinder-8wc8m/dask-xgb-classificator:latest -r fraudfinder-8wc8m -l us-central1
+
 while getopts u:r:l: flag
 do
     case "$flag" in
