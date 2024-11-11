@@ -3,7 +3,7 @@ import argparse
 import requests
 from google.cloud import aiplatform as vertex_ai
 
-from fraudfinder.vertex_ai_labs.custom_train_05.trainer.utils import gcs_read, VertexConfig
+from trainer.utils import gcs_read, VertexConfig
 
 
 if __name__ == "__main__":

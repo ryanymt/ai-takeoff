@@ -8,9 +8,10 @@ chmod +x build.sh
 ```
 
 ### Run the training job from terminal
-You can provide persistent resource through argument `--ps`. If you have no such resource, ignore it and it will get available resources
+You need to provide the dataset id `--ds`. You can also provide persistent resource through argument `--ps`. 
+If you have no such resource, ignore it and it will get available resources
 ```bash
-python run.py --ps <persistent_resource_id>
+python run.py --ps <persistent_resource_id> --ds <dataset_id>
 ```
 
 ### Deploy to endpoint for online prediction
