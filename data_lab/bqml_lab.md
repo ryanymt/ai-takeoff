@@ -63,7 +63,15 @@ LIMIT 5;
 Click **RUN**.
 
 The results:
-ADD IMAGE
+
+| Row | v2ProductName | v2ProductCategory | units_sold |
+| -------- | ------- | ------- | ------- |
+| 1 | Nest® Learning Thermostat 3rd Gen-USA - Stainless Steel | Nest-USA | 17651 |
+| 2 | Nest® Cam Outdoor Security Camera - USA | Nest-USA | 16930 |
+| 3 | Nest® Cam Indoor Security Camera - USA | Nest-USA | 14155 |
+| 4 | Nest® Protect Smoke + CO White Wired Alarm-USA | Nest-USA | 6394 |
+| 5 | Nest® Protect Smoke + CO White Battery Alarm-USA | Nest-USA | 6340 |
+
 ### Question 1c: How many visitors bought on subsequent visits to the website?
 Clear the previous query, and then add the following query in the Editor:
 ```sql
@@ -85,7 +93,12 @@ GROUP BY will_buy_on_return_visit
 Click **RUN**.
 
 The results:
-ADD IMAGE
+
+| Row | total_visitors | will_buy_on_return_visit |
+| -------- | ------- | ------- |
+| 1 | 729848 | 0 |
+| 2 | 11873 | 1 |
+
 Analyzing the results, you can see that (11873 / 741721) = 1.6% of total visitors will return and purchase from the website. This includes the subset of visitors who bought on their very first session and then came back and bought again.
 ### Question 1d: What are some of the reasons a typical ecommerce customer will browse but not buy until a later visit?
 **Answer:** Although there is no one right answer, one popular reason is comparison shopping between different ecommerce sites before ultimately making a purchase decision. This is very common for luxury goods where significant up-front research and comparison is required by the customer before deciding (think car purchases) but also true to a lesser extent for the merchandise on this site (t-shirts, accessories, etc).
@@ -136,7 +149,20 @@ LIMIT 10;
 Click **RUN**.
 
 The results:
-ADD IMAGE
+
+| Row | bounces | time_on_site | will_buy_on_return_visit |
+| -------- | ------- | ------- | ------- |
+| 1 | 0 | 15047 | 0 |
+| 2 | 0 | 12136 | 0 |
+| 3 | 0 | 11201 | 0 |
+| 4 | 0 | 10046 | 0 |
+| 5 | 0 | 9974 | 0 | 
+| 6 | 0 | 9564 | 0 |
+| 7 | 0 | 9520 | 0 |
+| 8 | 0 | 9275 | 1 |
+| 9 | 0 | 9138 | 0 |
+| 10 | 0 | 8872 | 0 |
+
 
 ### Question 3b: Which fields are the input features and the label?
 **Answer:** The inputs are ```bounces``` and ```time_on_site```. The label is ```will_buy_on_return_visit```.
@@ -169,7 +195,7 @@ Now that you have your initial features selected, you are now ready to create yo
 
 There are the two model types to choose from:
 | Model | Model Type | Label Data Type | Example
-|  --------  |  -------  | ---------------  | -------  |
+|  --------  |  -------  | -------  | -------  |
 | Forecasting | linear_reg | Numeric value (typically an integer or floating point) | Forecast sales figures for next year given historical sales data. |
 | Classification | logistic_reg | 0 or 1 for binary classification | Classify an email as spam or not spam given the context. |
 
