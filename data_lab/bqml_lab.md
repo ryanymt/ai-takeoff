@@ -1,15 +1,11 @@
 # Predict Visitor Purchases with a Classification Model in BigQuery ML
 
-Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
-
 ## Task 0: Access the public dataset in BigQuery
-Before we get started, you'll need to get access to the public dataset located in the `data-to-insights` project. To access it, click on the link below and open it in a new tab:
-[https://console.cloud.google.com/bigquery?p=data-to-insights&d=ecommerce&t=web_analytics&page=table](https://console.cloud.google.com/bigquery?p=data-to-insights&d=ecommerce&t=web_analytics&page=table)
+Before we get started, you'll need to get access to the public dataset located in the `data-to-insights` project. 
+- To access it, click [here](https://console.cloud.google.com/bigquery?p=data-to-insights&d=ecommerce&t=web_analytics&page=table) and open it in a new tab:
+- You should see it under **Explorer** - click on the ⭐️ star icon next to it to pin it to your project.
 
-You should see it under **Explorer** - click on the ⭐️ star icon next to it to pin it to your project.
-
-ADD IMAGE HERE
-![Alt text](https://assets.digitalocean.com/articles/alligator/boo.svg "a title")
+![Data to Insights Project](./images/data_to_insights.png)
 
 The field definitions for the `data-to-insights` ecommerce dataset are [here](https://support.google.com/analytics/answer/3437719?hl=en). You can open this in a new tab and keep it open for reference. 
 
@@ -100,6 +96,7 @@ The results:
 | 2 | 11873 | 1 |
 
 Analyzing the results, you can see that (11873 / 741721) = 1.6% of total visitors will return and purchase from the website. This includes the subset of visitors who bought on their very first session and then came back and bought again.
+
 ### Question 1d: What are some of the reasons a typical ecommerce customer will browse but not buy until a later visit?
 **Answer:** Although there is no one right answer, one popular reason is comparison shopping between different ecommerce sites before ultimately making a purchase decision. This is very common for luxury goods where significant up-front research and comparison is required by the customer before deciding (think car purchases) but also true to a lesser extent for the merchandise on this site (t-shirts, accessories, etc).
 
@@ -114,7 +111,7 @@ Now you will create a Machine Learning model in BigQuery to predict whether or n
 Google Analytics captures a wide variety of dimensions and measures about a user's visit on this ecommerce website. Browse the complete list of fields in the [[UA] BigQuery Export schema documentation](https://support.google.com/analytics/answer/3437719?hl=en) and then [preview the demo dataset](https://console.cloud.google.com/bigquery?project=&p=data-to-insights&d=ecommerce&t=web_analytics&page=table) to find useful features that will help a machine learning model understand the relationship between data about a visitor's first time on your website and whether they will return and make a purchase.
 
 Your team decides to test whether these two fields are good inputs for your classification model:
--   totals.bounces (whether the visitor left the website immediately)
+- totals.bounces (whether the visitor left the website immediately)
 - totals.timeOnSite (how long the visitor was on our website)
 
 ### Question 3a: What are the risks of only using the above two fields?
@@ -182,7 +179,7 @@ Next, create a new BigQuery dataset which will also store your ML models.
 
 In the left pane, under the **Explorer** section, click on the **View actions** icon next to your project name, and then click **Create dataset**.
 
-INSERT IMAGE
+![Create dataset](./images/create_dataset.png)
 
 In the **Create dataset** dialog:
 - For Dataset ID, type **"ecommerce"**.
@@ -200,6 +197,7 @@ There are the two model types to choose from:
 | Classification | logistic_reg | 0 or 1 for binary classification | Classify an email as spam or not spam given the context. |
 
 **Which model type should you choose?**
+
 Since you are bucketing visitors into "will buy in future" or "won't buy in future", use logistic_reg in a classification model.
 
 The following query creates a model and specifies model options. Run this query to train your model:
@@ -239,14 +237,16 @@ FROM
 ```
 Wait for the model to train - it takes about 5 - 10 minutes.
 
-**Note:** You cannot feed all of your available data to the model during training since you need to save some unseen data points for model evaluation and testing. To accomplish this, add a WHERE clause condition is being used to filter and train on only the first 9 months of session data in your 12 month dataset.
+> [!NOTE]
+> You cannot feed all of your available data to the model during training since you need to save some unseen data points for model evaluation and testing. To accomplish this, add a WHERE clause condition is being used to filter and train on only the first 9 months of session data in your 12 month dataset.
 
-After your model is trained, you will see the message **"This statement created a new model named**
-ADD IMAGE
+After your model is trained, you will see the message:
+
+![model_results](./images/model_results.png)
 
 Click **Go to model.** Look inside the ecommerce dataset and confirm **classification_model** now appears.
 
-ADD IMAGE
+![model](./images/model.png)
 
 Next, you evaluate the performance of the model against new unseen evaluation data.
 
@@ -257,7 +257,7 @@ For classification problems in ML, you want to minimize the False Positive Rate 
 
 This relationship is visualized with a ROC (Receiver Operating Characteristic) curve like the one shown here, where you try to maximize the area under the curve or AUC:
 
-INSERT IMAGE
+![roc_curve](./images/roc_curve.png)
 
 In BigQuery ML, **roc_auc** is simply a queryable field when evaluating your trained ML model.
 - Now that training is complete, run this query to evaluate how well the model performs using **ML.EVALUATE**:
@@ -378,11 +378,14 @@ SELECT * EXCEPT(unique_session_id) FROM (
   country
 );
 ```
-**Note:** You are still training on the same first 9 months of data, even with this new model. It's important to have the same training dataset so you can be certain a better model output is attributable to better input features and not new or different training data.
+
+> [!NOTE]
+> You are still training on the same first 9 months of data, even with this new model. It's important to have the same training dataset so you can be certain a better model output is attributable to better input features and not new or different training data.
 
 A new key feature that was added to the training dataset query is the maximum checkout progress each visitor reached in their session, which is recorded in the field hits.eCommerceAction.action_type. If you search for that field in the [field definitions](https://support.google.com/analytics/answer/3437719?hl=en) you will see the field mapping of 6 = Completed Purchase.
 
-**Note:** The web analytics dataset has nested and repeated fields like [ARRAYS](https://cloud.google.com/bigquery/docs/reference/standard-sql/arrays) which need to be broken apart into separate rows in your dataset. This is accomplished by using the UNNEST() function, which you can see in the above query.
+>[!NOTE]
+> The web analytics dataset has nested and repeated fields like [ARRAYS](https://cloud.google.com/bigquery/docs/reference/standard-sql/arrays) which need to be broken apart into separate rows in your dataset. This is accomplished by using the UNNEST() function, which you can see in the above query.
 
 Wait for the new model to finish training - it takes about 5-10 minutes.
     
@@ -545,7 +548,7 @@ The predictions are made in the last 1 month (out of 12 months) of the dataset. 
 -   predicted_will_buy_on_return_visit_probs.label: the binary classifier for yes / no
 -   predicted_will_buy_on_return_visit.probs.prob: the confidence the model has in it's prediction (1 = 100%)
 
-INSERT IMAGE
+![predictions](./images/predictions.png)
 
 ## Task 9. Analyze results and additional information
 ### Results
