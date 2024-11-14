@@ -183,7 +183,7 @@ In the left pane, under the **Explorer** section, click on the **View actions** 
 
 In the **Create dataset** dialog:
 - For Dataset ID, type **"ecommerce"**.
-- Select **us-central1** for the location
+- Select **us-central1** for the region
 - Leave the other values at their defaults.
 - Click **Create dataset.**
 
