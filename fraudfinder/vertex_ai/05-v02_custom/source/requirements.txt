@@ -2,5 +2,7 @@ google-cloud-bigquery
 google-cloud-aiplatform
 xgboost
 pandas
-sklearn
+scikit-learn  
 google-cloud-storage
+pyarrow
+google-cloud-bigquery-storage
