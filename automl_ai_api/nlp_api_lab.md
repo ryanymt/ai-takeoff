@@ -303,3 +303,86 @@ In the response you get back two entity objects: one for ```"sushi"``` and one f
 You can see that the score returned for ```"sushi"``` was a neutral score of 0, whereas ```"service"``` got a score of -0.7. Cool! You also may notice that there are two sentiment objects returned for each entity. If either of these terms were mentioned more than once, the API would return a different sentiment score and magnitude for each mention, along with an aggregate sentiment for the entity.
 
 Note: Don't be alarmed if your scores differ slightly than the example output.
+
+## Task 6. Multilingual natural language processing
+The Natural Language API also supports languages other than English (full list can be found in the [Language Support Guide](https://cloud.google.com/natural-language/docs/languages)).
+
+1.  Modify the code in ```request.json``` with a sentence in Japanese:
+
+```json
+{
+
+"document":{
+
+"type":"PLAIN_TEXT",
+
+"content":"日本のグーグルのオフィスは、東京の六本木ヒルズにあります"
+
+}
+
+}
+```
+
+
+2.  Press ```CTRL+X``` to exit nano, then ```Y``` to save the file, then ```ENTER``` to confirm.
+    
+
+Notice that you didn't tell the API which language the text is, it can automatically detect it!
+
+3.  Next, you send it to the ```analyzeEntities``` endpoint:
+
+```bash
+curl  "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}"  \
+
+-s  -X  POST  -H  "Content-Type:  application/json"  --data-binary  @request.json
+```
+
+And you get the following response:
+
+
+```json
+{
+  "entities": [
+    {
+      "name": "日本",
+      "type": "LOCATION",
+      "metadata": {
+        "mid": "/m/03_3d",
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Japan"
+      },
+      "salience": 0.23854347,
+      "mentions": [
+        {
+          "text": {
+            "content": "日本",
+            "beginOffset": 0
+          },
+          "type": "PROPER"
+        }
+      ]
+    },
+    {
+      "name": "グーグル",
+      "type": "ORGANIZATION",
+      "metadata": {
+        "mid": "/m/045c7b",
+        "wikipedia_url": "https://en.wikipedia.org/wiki/Google"
+      },
+      "salience": 0.21155767,
+      "mentions": [
+        {
+          "text": {
+            "content": "グーグル",
+            "beginOffset": 9
+          },
+          "type": "PROPER"
+        }
+      ]
+    },
+    ...
+  ]
+  "language": "ja"
+}
+```
+
+The wikipedia URLs even point to the Japanese Wikipedia pages!
