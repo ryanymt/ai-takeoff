@@ -169,6 +169,12 @@ vertex_ai/build_training
 vertex_ai/model
 vertex_ai/predictions.json
 vertex_ai/pipelines
+intro/vertex-ai-samples
+llm_tuning/data_train90.jsonl
+llm_tuning/data_val10.jsonl
+llm_tuning/train.jsonl
+llm_tuning/val.jsonl
+fraudfinder/id_file.txt
 
 # tuning
 .ipynb_checkpoints
