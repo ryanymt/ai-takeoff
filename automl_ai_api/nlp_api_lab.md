@@ -71,9 +71,8 @@ The Natural Language API also supports sending files stored in Cloud Storage for
 1.  You can now pass your request body, along with the API key environment variable you saved earlier, to the Natural Language API with the following curl command (all in one single command line):
 
 ```bash
-curl  "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}"  \
-
--s  -X  POST  -H  "Content-Type:  application/json"  --data-binary  @request.json  >  result.json
+curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
+-s -X POST -H "Content-Type: application/json" --data-binary @request.json > result.json
 ```
 
 2.  In order to check the response run:
@@ -157,7 +156,7 @@ Paste
 
 ```bash
 curl "https://language.googleapis.com/v1/documents:analyzeSentiment?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json" --data-binary @request.json
+-s -X POST -H "Content-Type: application/json" --data-binary @request.json
 ```
 
 
@@ -201,20 +200,16 @@ Note: Don't be alarmed if your scores differ slightly than the example output.
 
 Notice that you get two types of sentiment values: sentiment for the document as a whole, and sentiment broken down by sentence. The sentiment method returns two values:
 
--   ```score``` - is a number from -1.0 to 1.0 indicating how positive or negative the statement is.
-    
+-   ```score``` - is a number from -1.0 to 1.0 indicating how positive or negative the statement is.   
 -   ```magnitude``` - is a number ranging from 0 to infinity that represents the weight of sentiment expressed in the statement, regardless of being positive or negative.
-    
 
 Longer blocks of text with heavily weighted statements have higher magnitude values. The score for the first sentence is positive (0.7), whereas the score for the second sentence is neutral (0.1).
-
 
 ## Task 5. Analyzing entity sentiment
 
 In addition to providing sentiment details on the entire text document, the Natural Language API can also break down sentiment by the entities in the text. Use this sentence as an example:
 
 > "I liked the sushi but the service was terrible."
-
 
 In this case, getting a sentiment score for the entire sentence as you did above might not be so useful. If this was a restaurant review and there were hundreds of reviews for the same restaurant, you'd want to know exactly which things people liked and didn't like in their reviews. Fortunately, the Natural Language API has a method that lets you get the sentiment for each entity in the text, called analyzeEntitySentiment. Let's see how it works!
 Use nano to update request.json with the sentence below:
@@ -229,18 +224,15 @@ Use nano to update request.json with the sentence below:
 }
 ```
 
-
 2.  Press ```CTRL+X``` to exit nano, then ```Y``` to save the file, then ```ENTER``` to confirm.
     
 3. Then call the ```analyzeEntitySentiment``` endpoint with the following ```curl``` command:
 
 
 ```bash
-curl  "https://language.googleapis.com/v1/documents:analyzeEntitySentiment?key=${API_KEY}"  \
-
--s  -X  POST  -H  "Content-Type:  application/json"  --data-binary  @request.json
+curl "https://language.googleapis.com/v1/documents:analyzeEntitySentiment?key=${API_KEY}" \
+-s -X POST -H "Content-Type: application/json" --data-binary @request.json
 ```
-
 
 In the response you get back two entity objects: one for ```"sushi"``` and one for ```"service"```. Here's the full JSON response:
 
@@ -299,7 +291,6 @@ In the response you get back two entity objects: one for ```"sushi"``` and one f
 }
 ```
 
-
 You can see that the score returned for ```"sushi"``` was a neutral score of 0, whereas ```"service"``` got a score of -0.7. Cool! You also may notice that there are two sentiment objects returned for each entity. If either of these terms were mentioned more than once, the API would return a different sentiment score and magnitude for each mention, along with an aggregate sentiment for the entity.
 
 Note: Don't be alarmed if your scores differ slightly than the example output.
@@ -332,9 +323,8 @@ Notice that you didn't tell the API which language the text is, it can automatic
 3.  Next, you send it to the ```analyzeEntities``` endpoint:
 
 ```bash
-curl  "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}"  \
-
--s  -X  POST  -H  "Content-Type:  application/json"  --data-binary  @request.json
+curl "https://language.googleapis.com/v1/documents:analyzeEntities?key=${API_KEY}" \
+-s -X POST -H "Content-Type: application/json" --data-binary @request.json
 ```
 
 And you get the following response:
