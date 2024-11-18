@@ -11,6 +11,7 @@ def gcs_read(project_id: str, bucket: str, blob_name: str) -> storage.Blob:
 
 class VertexConfig(BaseModel):
     PROJECT_ID: str
+    STAGING_BUCKET: str
     BUCKET_NAME: str
     REGION: str
     ID: str
