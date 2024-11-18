@@ -73,7 +73,7 @@ def copy_blob(
     print(f"File copied from gs://{source_bucket.name}/{source_blob.name} \n\t\t to gs://{destination_bucket.name}/{blob_copy.name}")
 
 
-def get_batch_data_gcs(BUCKET_NAME):
+def get_batch_data_gcs(BUCKET_NAME, REGION):
     '''
     Copy necessary files for datagen streaming
     '''
@@ -113,7 +113,8 @@ def get_batch_data_gcs(BUCKET_NAME):
 
     return "Done get_batch_data_gcs"
 
-def get_batch_data_bq(PROJECT):
+def get_batch_data_bq(PROJECT, REGION):
+    print(REGION)
     '''
     Creates the following tables in your project by copying from public tables:
 
@@ -125,11 +126,14 @@ def get_batch_data_bq(PROJECT):
     |-`customers` (table: profiles of customers)
     |-`terminals` (table: profiles of terminals)
     |-`customersterminals` (table: profiles of customers and terminals within their radius)
+    
+    
+    run_bq_query(f"CREATE SCHEMA IF NOT EXISTS `{PROJECT}`.tx OPTIONS(location=`'{REGION}'`);")
+    run_bq_query(f"CREATE SCHEMA IF NOT EXISTS `{PROJECT}`.demographics OPTIONS(location=`'{REGION}'`);")
     '''
-
-    run_bq_query(f"CREATE SCHEMA IF NOT EXISTS `{PROJECT}`.tx OPTIONS(location='us-central1');")
-    run_bq_query(f"CREATE SCHEMA IF NOT EXISTS `{PROJECT}`.demographics OPTIONS(location='us-central1');")
-
+    run_bq_query("CREATE SCHEMA IF NOT EXISTS `%s`.tx OPTIONS(location='%s');" % (PROJECT, REGION))
+    run_bq_query("CREATE SCHEMA IF NOT EXISTS `%s`.demographics OPTIONS(location='%s');" % (PROJECT, REGION))
+    
     run_bq_query(f"""
     CREATE OR REPLACE TABLE `{PROJECT}`.tx.tx 
     PARTITION BY
@@ -197,5 +201,7 @@ def get_batch_data_bq(PROJECT):
 if __name__ == "__main__":
     PROJECT = get_project_id()
     BUCKET_NAME = sys.argv[1]
-    get_batch_data_gcs(BUCKET_NAME)
-    get_batch_data_bq(PROJECT)
+    REGION = sys.argv[2]
+    print(REGION)
+    get_batch_data_gcs(BUCKET_NAME, REGION)
+    get_batch_data_bq(PROJECT, REGION)
