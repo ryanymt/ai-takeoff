@@ -58,7 +58,7 @@ git clone https://github.com/AbiramiSukumaran/movie-score.git
 ```
 
 ```bash
-cd  movie-score
+cd movie-score
 ```
 
 3.  If it says that the destination path ```movie-score``` already exists and is not an empty directory. Proceed to ```cd movie-score``` (the folder may have been already cloned during testing)
@@ -73,9 +73,9 @@ bq load --source_format=CSV --skip_leading_rows=1 movies_data.movies_score ./mov
 Go to the BigQuery console and create a new query:
 
 ```sql
-SELECT  name,  rating,  genre,  runtime
-FROM  movies_data.movies_score
-LIMIT  3;
+SELECT name, rating, genre, runtime
+FROM movies_data.movies_score
+LIMIT 3;
 ```
 
 ![First Query](./automl-images/1.png)

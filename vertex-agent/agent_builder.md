@@ -2,7 +2,7 @@
 
 Adapted from: [Building AI Agents with Vertex AI Agent Builder on Codelabs](https://codelabs.developers.google.com/devsite/codelabs/building-ai-agents-vertexai#0)\
 Modified by: [Wan Qi Ang](https://github.com/angwanqi) for 2024 EDB x Google Cloud - Cloud AI Take Off Program\
-Last updated: 17 November 2024
+Last updated: 18 November 2024
 
 ## Overview
 In this lab, you'll learn how to build and deploy generative AI agents using Google Cloud's powerful tools and infrastructure. We'll cover the essential concepts and walk you through the initial steps to get your first agent up and running.
@@ -89,8 +89,7 @@ With Vertex AI Agent Builder, AI Agents can be created in just a few steps.
 
 ### Step 4: Let's try chatting with your newly created agent
 - Select the agent that you just created (e.g. Info Agent)
-- Choose the underlying generative AI model for your agent
-    - **Example:** gemini-1.5-flash-002
+- Choose ```gemini-1.5-flash``` as the underlying generative AI model for your agent
 - Test your agent by having a conversation with it
     - **Example:** Hello how are you doing?
 
@@ -180,9 +179,12 @@ There will be new settings under the **Data stores** section. If you are not abl
 - Head back to the Agent page again, check the **Data Store (e.g. Alternative Location)**, and click on **Save** button at top of the page.
 ![select datastore setting](./agents-images/22.png)
 
+### Update your agent's instructions to use the datastore
+
 You are almost there! The final step is to include the "Alternative Location" tool in the agent's instructions. 
-- Add a line under instructions
-    - \- Use ${TOOL: Alternative Location} if the user's request contains a location that does not exist, to the agent's instructions.
+- Under **Instructions**, add the following line:
+```- Use ${TOOL: Alternative Location} if the user's request contains a location that does not exist```
+![Add instructions](./agents-images/24.png)
 
 - After saving the agent, try asking your agent about getting to Wakanda
 > Example: What’s the best way to reach Wakanda?
@@ -194,5 +196,36 @@ Again, you will get a different response like this:
 Congratulations! Your agent is now recommending places using the provided information from the text file.
 
 ## Delegating tasks to another Agent
-To be added
+We can take things up another level by introducing a 2nd agent to interact with the agent that we just built. Imagine a system where we have multiple agents working together with each one of them tasked to handle a certain task - here's where we are going to build that! 
+
+### Create a 2nd agent that can provide recommendations for travel destinations
+- In the left panel, click on **Agents** and **+ Create**.
+- Enter the following details:
+    - **Agent Name:** Travel Inspiration Agent
+    - **Goal:** You are an expert travel assistant! Your job is to inspire aspiring travelers by providing them with recommendations on where they should travel on vacation.
+    - **Instructions:** - Based on the user's request, use your knowledge of cities around the world provide a short list of city recommendations for the user to travel to
+- Click on **Save** once done.
+![Travel inspiration agent](./agents-images/25.png)
+
+### Update 1st Agent to delegate tasks to 2nd Agent
+Now that we have the 2nd agent up, we'll need to let the 1st agent know when they should delegate to the 2nd agent.
+- Head back to the first agent that you created
+- Under **Instructions**, add the following line:
+    - ```- If the user request is asking for recommendations, call ${AGENT:Travel Inspiration Agent}```
+- And that's it! 
+
+### Try asking the agent about some recommendations
+- On the right panel, choose ```gemini-1.5-flash``` as the underlying generative AI model for your agent
+- Test your agent by having a conversation with it
+    - **Example:** Can you recommend some beach vacations in Asia?
+- You should be able to see that the **Info Agent** passed it on to **Travel Inspiration Agent** to provide a response. 
+![Travel inspiration agent response](./agents-images/26.png)
+
+So that's how you can create multiple agents and get them to work together! 
+
+# More resources
+If you would like to explore more, there are [pre-built agents](https://cloud.google.com/dialogflow/cx/docs/concept/playbook/prebuilt) that you can quickly deploy into your projects. 
+
+
+
 
