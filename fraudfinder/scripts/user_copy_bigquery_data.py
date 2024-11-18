@@ -208,4 +208,4 @@ if __name__ == "__main__":
     PROJECT = get_project_id()
     BUCKET_NAME = sys.argv[1]
     get_batch_data_gcs(BUCKET_NAME)
-    get_batch_data_bq(PROJECT)
+    #get_batch_data_bq(PROJECT)
