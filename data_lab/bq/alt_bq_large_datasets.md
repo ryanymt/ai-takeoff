@@ -78,7 +78,7 @@ SELECT
   title, language,
   SUM(views) AS views
 FROM
-  cloud-ai-take-off.wikipedia_benchmark.Wiki100B
+  `cloud-ai-take-off.wikipedia_benchmark.Wiki100B`
 WHERE
   REGEXP_CONTAINS(title,"G.*o.*o.*g")
 GROUP BY
