@@ -61,12 +61,13 @@ https://travel-places-search-951134149941.us-central1.run.app
 ![Replace URL](./images/replace_server_url.png)
 
 - Repeat this for the other tools - remember to always click **Save** after you edit!
-| Tool name | URL |
-| -------- | ------- |
-| places_search | https://travel-places-search-951134149941.us-central1.run.app |
-| hotel_booking | https://travel-book-hotel-951134149941.us-central1.run.app |
-| hotel_search | https://travel-places-search-951134149941.us-central1.run.app |
-| get_user_profile | https://travel-get-user-profile-951134149941.us-central1.run.app |
+  
+| Tool Name         | URL |
+| :---------------- | :------ |
+| places_search     | https://travel-places-search-951134149941.us-central1.run.app    |
+| hotel_booking     | https://travel-book-hotel-951134149941.us-central1.run.app       |
+| hotel_search      | https://travel-places-search-951134149941.us-central1.run.app    |
+| get_user_profile  | https://travel-get-user-profile-951134149941.us-central1.run.app |
 
 - Once you're done, you are ready to test your travel agent! You can ask for recommendations, more information about certain places and also try to get it to book a hotel for you (of course it'll be a simulated booking, not an actual one!)
 - Here are some as starters:
