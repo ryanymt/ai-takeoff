@@ -7,31 +7,11 @@ In this lab, you'll learn how to build and deploy generative AI agents using Goo
 
 With Vertex AI Agent Builder, AI Agents can be created in just a few steps. For today's lab, we will be importing a Pre-Built Agent so that you can see how it works and play around with it
 ### Step 1: Go to Vertex AI Agent Builder
-- Open [Vertex AI Agent Builder](https://console.cloud.google.com/gen-app-builder) in a new tab.
-- If you see the welcome page (see below), click on the **CONTINUE AND ACTIVATE THE API** button.
-- If you don't see it, you can move onto Step 2.
-    
-![Agent Builder Activate Page](./images/agent_builder_api.png)
+- Open a new tab and copy the URL below (Replace ```<PROJECT_ID>``` with your Project ID:
 
-### Step 2: Create an Agent
-- You will be redirected to the **App Creation** page. 
-- Click on the **CREATE A NEW APP** button.
-
-![Create App Page](./agents-images/2.png)
-
-- Select **Conversational Agent** on the next page
-
-![Select Agent Page](./images/select_agent.png)
-
-- You'll be brought to the **Conversational Agents** page
-- If you see that Dialogflow API page (below), please click on **Enable** to enable the API. If not, please continue to next step
-![Agent Builder Activate Page](./images/df_enable.png)
-- Next, select **Use a prebuilt agent**
-
-![Select Pre-built Page](./images/select_prebuilt.png)
-
-- If you get redirected to this page below, select **Use a prebuilt agent** again. (Ensure you have the right project selected at the top of the page)
-![Select Pre-built Page](./images/use_prebuilt.png)
+```
+https://dialogflow.cloud.google.com/v2/projects/<PROJECT_ID>/prebuilt
+```
 
 - In the next page (shown below), select the **Travel** agent
 
@@ -69,12 +49,24 @@ https://travel-places-search-951134149941.us-central1.run.app
 | hotel_search      | https://travel-places-search-951134149941.us-central1.run.app    |
 | get_user_profile  | https://travel-get-user-profile-951134149941.us-central1.run.app |
 
-- Once you're done, you are ready to test your travel agent! You can ask for recommendations, more information about certain places and also try to get it to book a hotel for you (of course it'll be a simulated booking, not an actual one!)
+- Once you're done, you are ready to test your travel agent! 
+- Head back to Playbooks and select **Travel Steering**
+- Click on the **Chat** icon at the top to toggle open the simulator
+![Toggle open chat](./images/toggle_chat.png)
+
+### Ask away!
+You can ask for recommendations, more information about certain places and also try to get it to book a hotel for you (of course it'll be a simulated booking, not an actual one!)
 - Here are some as starters:
     - Beach vacation in Phuket
     - Hotels near the beach in Phuket
     - Hotels in Sentosa
-    
+
+For example: When asking about certain places you should be able to see that the ```places_search``` tool gets triggered to do a Google Maps API call and retrieve places related to your query. And that's how you get your agent to interact with other systems to enrich it.
+
+![Tools Trigger](./images/trigger_tool.png)
+
+
+
 
 
 
