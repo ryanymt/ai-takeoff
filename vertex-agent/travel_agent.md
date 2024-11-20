@@ -45,10 +45,10 @@ With Vertex AI Agent Builder, AI Agents can be created in just a few steps. For 
 ![Pre-built Agent Settings](./images/prebuilt_agent_settings.png)
 
 - Once created, click into the **Travel Steering** playbook
-- Under Instructions, ensure that the phrases are replaced with **PLAYBOOKS** (see red boxes in screenshot below)
+- Under **Instructions**, ensure that the phrases are replaced with **PLAYBOOK** (see red boxes in screenshot below)
 ![Change Playbook](./images/change_playbook.png)
 
-- Next, in the left panel click on **Tools*
+- Next, in the left panel click on **Tools**
 - Click into **places_search** tool.
 ![Tools Page](./images/tools_page.png)
 
